@@ -55,6 +55,7 @@ target/
 
 # Sqlite3 Databases
 *.sqlite3
+data/db.sqlite3
 
 bin/
 lib/
