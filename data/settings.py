@@ -14,6 +14,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'app',
 )
 
