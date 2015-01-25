@@ -1,6 +1,7 @@
 Django==1.7.3
 Pygments==2.0.2
 Unirest==1.1.6
+django-environ==0.3.0
 httpie==0.8.0
 poster==0.8.1
 requests==2.5.1

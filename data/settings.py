@@ -1,3 +1,4 @@
+import os
 """
 Contains the database access settings.
 """
