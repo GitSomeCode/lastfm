@@ -1,4 +1,11 @@
 import os
+import environ
+
+# Reads the environment file (.env)
+environ.Env.read_env(env_file="../.env")
+env = environ.Env()
+API_KEY = env("api_key")
+
 """
 Contains the database access settings.
 """
@@ -15,7 +22,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
+    #'django.contrib.auth',
     'app',
 )
 

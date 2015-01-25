@@ -1,0 +1,4 @@
+1. store all artists -- 50 per page, 20 pages total
+2. tuples of tags per artist
+3. refactor calc function
+4. store tagRelation in database
