@@ -1,0 +1,11 @@
+*.sublime-project
+*.sublime-workspace
+*.pyc
+
+# Sqlite3 Databases
+.sqlite3
+
+bin/
+lib/
+include/
+
