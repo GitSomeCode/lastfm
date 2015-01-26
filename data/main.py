@@ -7,6 +7,11 @@ from django.conf import settings
 from app.models import Tag, TagRelation
 import itertools, json
 django.setup()
+
+
+api_url = "http://ws.audioscrobbler.com/2.0/"
+artists = []
+
 ##################################
 def calc(exampleTuple, percent):
   """
@@ -26,14 +31,6 @@ def calc(exampleTuple, percent):
   return resultTuple
 ##################################
 
-def tagsForRelation(tagTuple):
-  """
-  Returns two sets of tag name, tag count.
-  Needed when making a new TagRelation.
-  """
-  # ((tag1name, tag1count), (tag2name, tag2count))
-  return 
-
 # takes in list of tuples [(), (), ..., ()]
 def calcGroup(group):
   """
@@ -50,13 +47,13 @@ def calcGroup(group):
     tag_name1 = relation[0]
     tag_name2 = relation[1]
     metric = relation[2]
-    getRelation(tag_name1, tag_name2)
     
     # do tagRelation stuff here 
     relExists = getRelation(tag_name1, tag_name2)
-    if relExists:
-      relExists.metric += metric
-    else:
+    if not relExists:
+      relExists = TagRelation.objects.create(tag_to=Tag.objects.get(name=i[0][0]), tag_from=Tag.objects.get(name=i[1][0]), metric=metric)
+    relExists.metric += metric
+    relExists.save()
       
     '''
     if TagRelation exists, then just update the metric, 
@@ -81,10 +78,6 @@ def getRelation(name1, name2):
     return None
 #################################
 
-
-api_url = "http://ws.audioscrobbler.com/2.0/"
-artists = []
-
 def getTopArtists():
   '''
   Calls api method "chart.getTopArtists"
@@ -97,7 +90,7 @@ def getTopArtists():
   for a in result["artists"]["artist"]:
     print a["name"]
     artists.append(a["name"])
-
+#################################
 
 def artistRelation(artists):    
   # for each artist, compile a list of tuples with their tag information, save tags to database, create combinations, calc, create TagRelation, and save TagRelation
@@ -118,5 +111,6 @@ def artistRelation(artists):
         new_tag.count =  tag_tuple[1]
 
     calcGroup(tag_list)
+#################################
 
 
