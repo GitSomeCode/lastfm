@@ -20,6 +20,7 @@ def calc(exampleTuple, percent):
   Adds this to the percent.
   Takes average of this total.
   """
+  print "In calc function"
   #import pdb; pdb.set_trace();
   tag1count = exampleTuple[0][1]/100
   tag2count = exampleTuple[1][1]/100
@@ -28,6 +29,7 @@ def calc(exampleTuple, percent):
   metric = (percent + tagAvg)/2
   resultTuple = (exampleTuple[0][0], exampleTuple[1][0], metric)
   
+  print "returning resultTuple --- " + str(resultTuple)
   return resultTuple
 ##################################
 
@@ -39,6 +41,7 @@ def calcGroup(group):
   Tuples in list are ('tag_name', tag_count)
   """
   percent = 1/len(group)
+  print "percent is " + str(percent)
   
   for i in itertools.combinations(group, 2):
     
@@ -95,20 +98,26 @@ def getTopArtists():
 def artistRelation(artists):    
   # for each artist, compile a list of tuples with their tag information, save tags to database, create combinations, calc, create TagRelation, and save TagRelation
   for a in artists:
+    print "calculating relations for .... " + str(a)
     artistsTags = unirest.post(api_url, headers={"Accept":"application/json"}, params={"api_key":settings.API_KEY, "artist":a, "method":"artist.getTopTags", "format":"json"})
     tag_body = artistsTags.body
 
     # empty list to store tag tuples [(name, count), (name, count),..., (name, count)]
     tag_list = []
-
-    for tag_dict in tag_body["toptags"]["tag"]:
+      
+      
+    for tag_dict in tag_body["toptags"]["tag"][:10]:
       tag_tuple = (tag_dict["name"], int(tag_dict["count"]))
       tag_list.append(tag_tuple)
-
+      
       # add tag to database
-      new_tag, created = Tag.objects.get_or_create(name=tag_tuple[0], count=tag_tuple[1])
+      #new_tag, created = Tag.objects.get_or_create(name=tag_tuple[0], count=tag_tuple[1])
+      new_tag, created = Tag.objects.get_or_create(name=tag_tuple[0])
       if created == False:
+        print str(new_tag.name) + " already exists"
         new_tag.count =  tag_tuple[1]
+      else: 
+        print str(new_tag.name) + " now created"
 
     calcGroup(tag_list)
 #################################
