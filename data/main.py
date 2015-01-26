@@ -26,7 +26,7 @@ def calc(exampleTuple, percent):
   tag2count = exampleTuple[1][1]/100
   tagSum = tag1count + tag2count
   tagAvg = tagSum/2
-  metric = (percent + tagAvg)/2
+  metric = round((percent + tagAvg)/2, 4)
   resultTuple = (exampleTuple[0][0], exampleTuple[1][0], metric)
   
   print "returning resultTuple --- " + str(resultTuple)
@@ -54,6 +54,7 @@ def calcGroup(group):
     # do tagRelation stuff here 
     relExists = getRelation(tag_name1, tag_name2)
     if not relExists:
+      print "NEW RELATION"
       relExists = TagRelation.objects.create(tag_to=Tag.objects.get(name=i[0][0]), tag_from=Tag.objects.get(name=i[1][0]), metric=metric)
     relExists.metric += metric
     relExists.save()
